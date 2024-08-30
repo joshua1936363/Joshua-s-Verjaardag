@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verjaardag</title>
+    <style>
+        body {
+            color: white;
+            background-image: url('birthday_picture.jpg'); /* background */
+            background-size: cover;  
+        }
+        form {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for the form */
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .submission {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            position: relative;
+        }
+        .clear-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="makeup">
+    <header>
+        <h1>Welkom op mijn website dit is de website voor mijn verjaardag</h1>
+    </header>
+
+    <main>
+        <h2>Over mijn verjaardag</h2>
+        <p>Zoals jullie allemaal weten is mijn verjaardag er weer bijna dit wil ik graag weer vieren op ... zijn jullie welkom van ... tot ... en hoop ik jullie allemaal te zien</p>
+        
+        <form id="submissionForm">
+            <label for="name">Naam:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="message">Bericht:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+
+            <input type="submit" value="Verzenden">
+        </form>
+
+        <h2>Inzendingen</h2>
+        <div id="submissions"></div>
+    </main>
+
+    <footer>
+        <p>© copyright 2024 Joshua.V.D</p>
+    </footer>
+
+    <script>
+        document.getElementById('submissionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+
+            const submission = {
+                name: name,
+                message: message
+            };
+
+            let submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            submissions.push(submission);
+            localStorage.setItem('submissions', JSON.stringify(submissions));
+
+            displaySubmissions();
+            this.reset();
+        });
+
+        function displaySubmissions() {
+            const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            const submissionsDiv = document.getElementById('submissions');
+            submissionsDiv.innerHTML = '';
+
+            submissions.forEach((submission, index) => {
+                const submissionDiv = document.createElement('div');
+                submissionDiv.classList.add('submission');
+                submissionDiv.innerHTML = `<p><strong>Naam:</strong> ${submission.name}</p>
+                                           <p><strong>Bericht:</strong> ${submission.message}</p>
+                                           <button class="clear-button" onclick="clearSubmission(${index})">Clear</button>`;
+                submissionsDiv.appendChild(submissionDiv);
+            });
+        }
+
+        function clearSubmission(index) {
+            let submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            submissions.splice(index, 1);
+            localStorage.setItem('submissions', JSON.stringify(submissions));
+            displaySubmissions();
+        }
+
+        document.addEventListener('DOMContentLoaded', displaySubmissions);
+    </script>
+</body>
+</html>
